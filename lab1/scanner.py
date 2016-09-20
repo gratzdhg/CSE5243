@@ -8,7 +8,22 @@ class Scanner:
         self.rep2 = []
         for filename in os.listdir(path):
             soup = BeautifulSoup(open(path+"/"+filename),"lxml")
-            for text in soup.find_all('reuters'):
-                self.rep1.append(Article1(str(text.body),text.topics.find_all('d'),text.places.find_all('d')))
-                self.rep2.append(Article2(str(text.body),text.topics.find_all('d'),text.places.find_all('d')))
- 
+            for xml in soup.find_all('reuters'):
+                topicList = []
+                placesList = []
+                for topic in xml.topics.find_all('d'):
+                    topicList.append(topic.get_text())
+                for place in xml.places.find_all('d'):
+                    placesList.append(place.get_text())
+                body = xml.find('text').get_text()
+                self.rep1.append(Article1(body,topicList,placesList))
+                self.rep2.append(Article2(body,topicList,placesList))
+
+    def __str__(self):
+        string = ""
+        for element in self.rep1:
+            string = string + str(element)
+        string += '\n'
+        for element in self.rep2:
+            string += str(element)
+        return string+'\n'

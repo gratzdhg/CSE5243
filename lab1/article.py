@@ -9,6 +9,11 @@ class Article1:
 		self.places = places
 		temp_words = re.split(' ', body)
 		self.words = self.featurize(temp_words)
+
+	def __str__(self):
+		string = "topics: "+str(self.topics)+" places: "+str(self.places)+" words "+str(self.words)
+		string += "\n"
+		return string
 		
 	def featurize(self, word_list):
 		d = {}
@@ -35,6 +40,11 @@ class Article2:
 		self.places = places
 		temp_words = nltk.word_tokenize(body)
 		self.words = self.featurize(temp_words)
+
+ 	def __str__(self):
+ 		string = "topics: "+str(self.topics)+" places: "+str(self.places)+" words "+str(self.words)
+		string += "\n"
+		return string
 		
 	def featurize(self, word_list):
 		d = {}

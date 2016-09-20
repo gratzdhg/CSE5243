@@ -1,9 +1,9 @@
-#!/usr/bin/python2.6
+#!/usr/local/python-2.7.10/bin/python2.7
 import scanner
 
 def main():
     path="./reuters"
     reuters = scanner.Scanner(path)
-    print reuters
+    print str(reuters)
 
 main()
