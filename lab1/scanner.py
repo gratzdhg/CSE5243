@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from article import *
 
-class scanner:
+class Scanner:
     def __init__(self,path):
         self.rep1 = []
         self.rep2 = []
