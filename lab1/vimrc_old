@@ -1,0 +1,107 @@
+" vimrc
+" Stephen Haffner
+" 2014-11-06
+
+"Pathogen
+execute pathogen#infect()
+"nmap \l :setlocal number!<CR>
+
+"General Vim
+syntax on
+filetype plugin on
+set cursorline
+set colorcolumn=100
+set spelllang=en
+set expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+"Switching panels
+nmap <A-k> :wincmd k<CR>
+nmap <A-j> :wincmd j<CR>
+nmap <A-h> :wincmd h<CR>
+nmap <A-l> :wincmd l<CR>
+
+"Tab stops
+nmap `t :set expandtab tabstop=4 shiftwidth=4 softtabstop=4<CR>
+nmap `T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
+nmap `M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
+nmap `m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
+
+"Text wrapping
+nmap `w :setlocal wrap!<CR>:setlocal wrap?<CR>
+
+
+"Paste
+"set pastetoggle=
+
+"Movement 
+nmap j gj
+nmap k gk
+
+"Syntastic
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_aggregate_errors = 1
+nmap `l :lnext<CR>
+nmap `h :lprev<CR>
+nmap `k :lopen<CR>
+nmap `j :lclose<CR>
+nmap `p :SyntasticCheck<CR>
+
+"Figitive/Git
+nmap `g :Gstatus<CR>
+
+"PowerLine
+set nocompatible   " Disable vi-compatibility                               
+set laststatus=2   " Always show the statusline                             
+set encoding=utf-8 " Necessary to show Unicode glyph
+let g:Powerline_symbols = 'unicode' "normal|unicode|fancy (fancy reqs fonts)
+let g:Powerline_theme = 'solarized256'
+let g:Powerline_colorscheme = 'solarized256'
+
+"CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'ra'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " Linux/MacOSX
+
+"TagList
+let Tlist_Ctags_Cmd='~/.vim/bin/ctags'
+let Tlist_Auto_Open=1
+nmap <C-t> :TlistToggle<CR>
+let Tlist_Use_Right_Window=1
+let Tlist_Exit_OnlyWindow=1
+
+"NERDTree
+nmap <C-n> :NERDTreeToggle<CR>
+let NERDTreeQuitOnOpen=1
+
+"Buffers
+nmap <C-l> :bnext<CR>
+nmap <C-h> :bprev<CR>
+
+"Searching
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+
+"Theme/Color
+set t_Co=256
+set background=dark " dark | light "                       
+"colorscheme solarized
+nmap `Q :set background=dark<CR>
+nmap `q :set background=light<CR>
+
+"latex
+let g:tex_flavor = "latex"
+
+""Close if NERDTree and TagList are the only buffers left
+"fun! NoExcitingBuffersLeft() "THIS DOES NOT WORK YET
+"   if tabpagenr("$") == 1 && winnr("$") == 2
+"      let window1 = bufname(winbufnr(1))
+"      let window2 = bufname(winbufnr(2))
+"      if (window1 == "NERD_tree_1" || window1 == "__Tag_List__") && (window2 == "NERD_tree_1" || window2 == "__Tag_List__")
+"         quit
+"      endif
+"   endif
+"endfun
+"autocmd BufWinLeave * call NoExcitingBuffersLeft()
