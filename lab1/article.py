@@ -1,7 +1,16 @@
 import re
-import nltk
+from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 wnl = WordNetLemmatizer()
+
+def try_increment(dictionary, key):
+	value = True
+	if key in dictionary.keys():
+		dictionary[key] += 1
+	else:
+		dictionary[key] = 1
+		value = False
+	return value
 
 class Article1:
 	def __init__(self, body, topics, places):
@@ -18,11 +27,11 @@ class Article1:
 	def featurize(self, word_list):
 		d = {}
 		for w in word_list:
-			if w in d.keys():
-				d[w] += 1
-			else:
-				d[w] = 1
+			try_increment(d,w)
 		return d
+		
+	def contains_word(self, w):
+		return w in self.words.keys()
 		
 	def get_features(self):
 		return self.words
@@ -35,26 +44,31 @@ class Article1:
 		
 		
 class Article2:
-	def __init__(self, body, topics, places):
+	def __init__(self, body, topics, places, idf_dict):
 		self.topics = topics
 		self.places = places
-		temp_words = nltk.word_tokenize(body)
-		self.words = self.featurize(temp_words)
+		temp_words = word_tokenize(body)
+		self.words = self.featurize(temp_words, idf_dict)
+		
+	def contains_word(self, w):
+		return w in self.words.keys()
 
  	def __str__(self):
  		string = "topics: "+str(self.topics)+" places: "+str(self.places)+" words "+str(self.words)
 		string += "\n"
 		return string
 		
-	def featurize(self, word_list):
+	def featurize(self, word_list, idf_dict):
 		d = {}
 		for w in word_list:
-			w1 = wnl.lemmatize(w)
-			if w1 in d.keys():
-				d[w1] += 1
-			else:
-				d[w1] = 1
+			w_stem = wnl.lemmatize(w)
+			if not try_increment(d,w_stem):
+			 	try_increment(idf_dict, w_stem)
 		return d
+		
+	def adjust_tf_idf(self, word, idf):
+		if self.contains_word(word):
+			self.words[word] = float(self.words[word]) * float(idf)
 		
 	def get_features(self):
 		return self.words
