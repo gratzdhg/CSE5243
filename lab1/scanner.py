@@ -25,7 +25,7 @@ class Scanner:
         
         self.finish_idf()
         for article in self.rep2:
-            word_list = article.get_features().keys()
+            word_list = article.get_features()
             for w in word_list:
                 article.adjust_tf_idf(w,self.idf_table[w])
 
@@ -39,7 +39,7 @@ class Scanner:
         return string+'\n'
         
     def finish_idf(self):
-        for word in self.idf_table.keys():
+        for word in self.idf_table:
             N = len(self.rep2)
             i = math.log(N/float(self.idf_table[word]))    #this uses natural logarithm, which may or may not be desirable.
             self.idf_table[word] = i

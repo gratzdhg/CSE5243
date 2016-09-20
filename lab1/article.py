@@ -5,7 +5,7 @@ wnl = WordNetLemmatizer()
 
 def try_increment(dictionary, key):
 	value = True
-	if key in dictionary.keys():
+	if key in dictionary:
 		dictionary[key] += 1
 	else:
 		dictionary[key] = 1
@@ -31,7 +31,7 @@ class Article1:
 		return d
 		
 	def contains_word(self, w):
-		return w in self.words.keys()
+		return w in self.words
 		
 	def get_features(self):
 		return self.words
@@ -51,7 +51,7 @@ class Article2:
 		self.words = self.featurize(temp_words, idf_dict)
 		
 	def contains_word(self, w):
-		return w in self.words.keys()
+		return w in self.words
 
  	def __str__(self):
  		string = "topics: "+str(self.topics)+" places: "+str(self.places)+" words "+str(self.words)
