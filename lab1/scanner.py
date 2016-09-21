@@ -2,6 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from article import *
 import math
+import codecs
 
 class Scanner:
     def __init__(self,path):
@@ -43,3 +44,32 @@ class Scanner:
             N = len(self.rep2)
             i = math.log(N/float(self.idf_table[word]))    #this uses natural logarithm, which may or may not be desirable.
             self.idf_table[word] = i
+
+    def printFileXML(self, filename, repList):
+        outFile = open(filename, 'w')
+        for doc in repList:
+            outFile.write("<document>\n\t<topicList>\n")
+            for topic in doc.get_topics():
+                outFile.write("\t\t<topic>"+str(topic)+"</topic>\n")
+            outFile.write("\t</topicList>\n\t<placeList>\n")
+            for place in doc.get_places():
+                outFile.write("\t\t<place>"+str(place)+"</place>\n")
+            outFile.write("\t</placeList>\n\t<featureVector>\n")
+            d = doc.get_features()
+            for word in d:
+                try:
+                    outFile.write("\t\t<feature>"+str(word)+" : "+str(d[word])+"</feature>\n")
+                except UnicodeEncodeError:
+                    print str(word)+" lost"
+            outFile.write("\t</featureVector>\n</document>\n")
+        outFile.close()
+
+    def printFileXML2(self, filename):
+        self.printFileXML(filename, self.rep2)
+
+    def printFileXML1(self, filename):
+        self.printFileXML(filename, self.rep1)
+
+
+
+

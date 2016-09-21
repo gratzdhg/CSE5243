@@ -1,9 +1,9 @@
-import re
 from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 wnl = WordNetLemmatizer()
 
 def try_increment(dictionary, key):
+	key = key.encode('ascii','ignore')
 	value = True
 	if key in dictionary:
 		dictionary[key] += 1
@@ -16,7 +16,7 @@ class Article1:
 	def __init__(self, body, topics, places):
 		self.topics = topics
 		self.places = places
-		temp_words = re.split(' ', body)
+		temp_words = word_tokenize(body)
 		self.words = self.featurize(temp_words)
 
 	def __str__(self):
