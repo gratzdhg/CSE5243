@@ -3,8 +3,8 @@ import scanner
 
 def main():
     path="./reuters"
-    filename1="out1.data"
-    filename2="out2.data"
+    filename1="out1.xml"
+    filename2="out2.xml"
     reuters = scanner.Scanner(path)
     reuters.printFileXML1(filename1)
     reuters.printFileXML2(filename2)

@@ -1,1 +1,39 @@
-temp
+AUTHORS:        Daniel Gratz.24, Denver Woodward.163
+CONTIBUTIONS:   Daniel: main.py, scanner.py, article.py (string output functions)
+                Denver: article.py, scanner.py (text output & TFIDF)
+                The simple breakdown is that Daniel primarly worked on data colection, reading the
+                files and formating them, while Denver worked on data storage and the 
+                representations. We both worked on outputing the data to files.
+REQUIREMENTS:   python2.7, BeautifulSoup, nltk
+RUN:            either run make or ./main.py or python2.7 main.py
+RUN TIME:       ~6min
+DATA FILES:     they are xml documents named out1.xml and out2.xml for the two methods we used to
+                process the data
+FILE LOCATIONS: ~gratzd/CSE5243/lab1 or github.com/gratzdhg/CSE5243
+----------------------------------------------------------------------------------------------------
+REPORT----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+METHOD1:        out1.xml, only a basic representation. It tokenizes the words in the body of the
+                text while also storing the topics and the places in lists. The words of the body
+                are stored as counts for each document and can be read in the xml file as 
+                <feature>word : count</feature>. Note that only words that actually appear in the
+                document are stored in this way. Our rational was that this caputres the basic
+                information of the document in a way which is very time effeciant to compute and
+                overall simple to work with.
+FILTERED:       We kept only things contained in reuters->topics,reuters->places or reuters->text
+                all else was ignored. There were only a small number of words which could not be
+                read.
+ASSUMTIONS:     Things not found in one of the FILTERED feilds are not needed to determine the
+                topics of the articles.
+METHOD2:        out2.xml, a more sophisticated representation. It tokenizes the words in the body as
+                well as performing stemming to reduce redundant words. Then it computes the TF/IDF
+                for the final word value. They are similarly stored as 
+                <feature>word : TF/IDF</feature>. Our rational with this one was to compute a more
+                useful but more expensive feature vector that would hopefully yield better results
+                later on.
+FILTERED:       We kept only things contained in reuters->topics,reuters->places or reuters->text
+                all else was ignored. There were only a small number of words which could not be
+                read.
+ASSUMTIONS:     Things not found in one of the FILTERED feilds are not needed to determine the
+                topics of the articles.
+

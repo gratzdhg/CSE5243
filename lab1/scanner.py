@@ -2,7 +2,6 @@ import os
 from bs4 import BeautifulSoup
 from article import *
 import math
-import codecs
 
 class Scanner:
     def __init__(self,path):
