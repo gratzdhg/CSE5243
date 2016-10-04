@@ -4,7 +4,30 @@ from article import *
 import math
 
 class Scanner:
-    def __init__(self,path):
+    def __init__(self,path,file1 = None,file2 = None):
+        self.rep1 = []
+        self.rep2 = []
+        if file1 is not None:
+            soup = BeautifulSoup(open(path+"/"+file1),"lxml")
+            for xml in soup.find_all('document'):
+                topicList = []
+                placesList = []
+                words = {}
+                for topic in xml.topicList.find_all('topic'):
+                    topicList.append(topic.get_text())
+                for place in xml.placesList.find_all('place'):
+                    placesList.append(place.get_text())
+                for feature in xml.featureVector.find_all('feature'):
+                    split = feature.get_text().split(" : ",2)
+                    if len(split) >= 2:
+                        words[split[0]] = float(split[1])
+                self.rep1.append(Article1(words,topicList,placesList,False))
+        if file2 is not None:
+            pass
+        if file1 is None and file2 is None:
+            self.init1(path)
+
+    def init1(self,path):
         self.rep1 = []
         self.rep2 = []
         self.idf_table = {}
