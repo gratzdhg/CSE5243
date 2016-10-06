@@ -7,21 +7,25 @@ class Scanner:
     def __init__(self,path,file1 = None,file2 = None):
         self.rep1 = []
         self.rep2 = []
+        self.idf_table = {}
         if file1 is not None:
             soup = BeautifulSoup(open(path+"/"+file1),"lxml")
             for xml in soup.find_all('document'):
                 topicList = []
                 placesList = []
                 words = {}
-                for topic in xml.topicList.find_all('topic'):
+                for topic in xml.topiclist.find_all('topic'):
                     topicList.append(topic.get_text())
-                for place in xml.placesList.find_all('place'):
+                for place in xml.placelist.find_all('place'):
                     placesList.append(place.get_text())
-                for feature in xml.featureVector.find_all('feature'):
+                for feature in xml.featurevector.find_all('feature'):
                     split = feature.get_text().split(" : ",2)
                     if len(split) >= 2:
-                        words[split[0]] = float(split[1])
-                self.rep1.append(Article1(words,topicList,placesList,False))
+                        try:
+                            words[split[0]] = float(split[1])
+                        except ValueError:
+                            print "BEGIN "+split[0]+" "+split[1]+" END"
+                self.rep1.append(Article2(words,topicList,placesList,self.idf_table,False))
         if file2 is not None:
             pass
         if file1 is None and file2 is None:

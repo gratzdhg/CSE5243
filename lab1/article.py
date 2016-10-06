@@ -16,11 +16,11 @@ class Article1:
 	def __init__(self, body, topics, places, featurizeBool=True):
 		self.topics = topics
 		self.places = places
-        if featurizeBool:
-		    temp_words = word_tokenize(body)
-		    self.words = self.featurize(temp_words)
-        else:
-            self.words = body
+		if featurizeBool:
+			temp_words = word_tokenize(body)
+			self.words = self.featurize(temp_words)
+		else:
+			self.words = body
 
 	def __str__(self):
 		string = "topics: "+str(self.topics)+" places: "+str(self.places)+" words "+str(self.words)
@@ -50,11 +50,11 @@ class Article2:
 	def __init__(self, body, topics, places, idf_dict, featurizeBool = True):
 		self.topics = topics
 		self.places = places
-        if featurizeBool:
-		    temp_words = word_tokenize(body)
-		    self.words = self.featurize(temp_words, idf_dict)
-        else:
-            self.words = body
+		if featurizeBool:
+			temp_words = word_tokenize(body)
+			self.words = self.featurize(temp_words, idf_dict)
+		else:
+			self.words = body
 		
 	def contains_word(self, w):
 		return w in self.words
