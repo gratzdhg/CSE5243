@@ -4,7 +4,8 @@ from scipy.sparse import coo_matrix
 from xml.sax.handler import ContentHandler
 
 class XMLHandler(ContentHandler):
-	def __init__(self):
+	def __init__(self, include_empty_topics = True):
+		self.include_topicless_docs = include_empty_topics
 		self.fullTopicList = []
 		self.fullPlaceList = []
 		self.data = []
@@ -17,13 +18,20 @@ class XMLHandler(ContentHandler):
 		if name == "document":
 			self.topicList = []
 			self.placeList =[]
+			self.newData = []
+			self.newColIndex = []
+			self.newRowIndex = []
 	def endElement(self, name):
 		if name == "document":
-			self.numDocs += 1
-			self.fullTopicList.append(self.topicList)
-			self.topicList = []
-			self.fullPlaceList.append(self.placeList)
-			self.placeList = []
+			if self.include_topicless_docs or (self.topicList != []):
+				self.numDocs += 1
+				self.fullTopicList.append(self.topicList)
+				self.topicList = []
+				self.fullPlaceList.append(self.placeList)
+				self.placeList = []
+				self.data += self.newData
+				self.colIndex += self.newColIndex
+				self.rowIndex += self.newRowIndex
 		elif name == "place":
 			self.checkWord(self.value)
 			self.placeList.append(self.wordPosMap[self.value])
@@ -36,9 +44,9 @@ class XMLHandler(ContentHandler):
 #				print str(split) + " " + str(self.value)
 				return
 			self.checkWord(split[0])
-			self.data.append(float(split[1]))
-			self.colIndex.append(self.numDocs)
-			self.rowIndex.append(self.wordPosMap[split[0]])
+			self.newData.append(float(split[1]))
+			self.newColIndex.append(self.numDocs)
+			self.newRowIndex.append(self.wordPosMap[split[0]])
 	def characters(self,content):
 		self.value = content
 	def getMatrix(self):
