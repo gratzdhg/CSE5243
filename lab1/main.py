@@ -54,7 +54,7 @@ def main():
 	#    reuters.printFileXML1(filename1)
 	#    reuters.printFileXML2(filename2)
 	
-def main2(filenum = 2):
+def main2(split = .7, filenum = 2):
 		#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
@@ -85,7 +85,7 @@ def main2(filenum = 2):
 			if t not in topics:
 				topics += [t]
 	
-	split = .7 #70/30 split
+	# 70/30 split by default
 	buildData = m[range(0,int(m.shape[0]*split)),:]
 	verifyData = m[range(int(m.shape[0]*split),m.shape[0]),:]
 	buildTopics = handler.fullTopicList[0:int(len(handler.fullTopicList)*split)]
@@ -118,5 +118,9 @@ def main2(filenum = 2):
 		if all_zero:
 			score1 += 1
 	print "exact / total = " + str(score1) + " / " + str(total) + " = " + str(score1/float(total))
+	return [score1,total]
+	
 	
 main2()
+
+
