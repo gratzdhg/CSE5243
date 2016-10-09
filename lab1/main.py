@@ -14,7 +14,7 @@ def main():
 	reader = make_parser()
 	handler = XMLHandler()
 	reader.setContentHandler(handler)
-	datasource = open(filename1,"r")
+	datasource = open(filename2,"r")
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
 	length = 0
@@ -30,25 +30,41 @@ def main():
 	verifyData = m[range(int(m.shape[0]*split),m.shape[0]),:]
 	buildTopics = handler.fullTopicList[0:int(len(handler.fullTopicList)*split)]
 	verifyTopics = handler.fullTopicList[int(len(handler.fullTopicList)*split):len(handler.fullTopicList)]
-	depth = 2
+	depth = 64
 	tree = ""
 	try:
-		tree = pickle.load(open("treeout_depth"+str(depth)+".bin","r"))
+		tree = pickle.load(open("treeout_depth"+str(depth)+"_goodData.bin","r"))
 	except IOError:
-		tree = DecisionTreeClassifier(max_depth=2)
+		tree = DecisionTreeClassifier(max_depth=depth)
 		tree.fit(buildData,buildTopics)
-		pickle.dump(tree, open("treeout_depth2.bin","w"))
+		pickle.dump(tree, open("treeout_depth"+str(depth)+"_goodData.bin","w"))
 	print "************ Finished Tree Build *************"
-	result = ""
-	return tree.predict_proba(verifyData)
-	resultPair = []
+	result = tree.predict(verifyData)
+	countCorrect = 0
+	count = 0
 	for i, val in enumerate(result):
 		val.sort()
 		verifyTopics[i].sort()
+		resultPair = []
+		allNone = True
 		for j, topic in enumerate(val):
-			resultPair = (topic, verifyTopics[i][j])
-	return resultPair
+			if verifyTopics[i][j] != -1:
+				allNone = False
+				count += 1
+				if topic == verifyTopics[i][j]:
+					countCorrect += 1
+			elif topic != -1:
+				count += 1
+				allNone = False
+		if allNone:
+			count += 1
+			countCorrect += 1
+				
+	return [count, countCorrect]
 	#    print str(reuters)
 	#    reuters.printFileXML1(filename1)
 	#    reuters.printFileXML2(filename2)
 	
+r = main()
+print r
+print float(r[1])/r[0]
