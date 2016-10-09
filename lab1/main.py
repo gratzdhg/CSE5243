@@ -121,6 +121,6 @@ def main2(split = .7, filenum = 2):
 	return [score1,total]
 	
 	
-main2()
-
+if __name__ == "__main__":
+	main2()
 
