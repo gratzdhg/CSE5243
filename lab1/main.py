@@ -54,15 +54,20 @@ def main():
 	#    reuters.printFileXML1(filename1)
 	#    reuters.printFileXML2(filename2)
 	
-def main2():
+def main2(filenum = 2):
 		#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
 	filename2="out2.xml"
+	filename=""
+	if filenum == 2:
+		filename = filename2
+	else:
+		filename = filename1
 	reader = make_parser()
 	handler = XMLHandler()
 	reader.setContentHandler(handler)
-	datasource = open(filename2,"r")
+	datasource = open(filename,"r")
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
 	
