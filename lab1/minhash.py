@@ -2,6 +2,15 @@ import random
 import itertools
 from scipy import sparse
 
+def compare(data1, data2):
+	same = 0
+	for i in range(0,len(data2)):
+		if data1[i] == data2[i]:
+			same += 1
+	diff = len(data1) - same
+	return float(same)/(same + 2*diff)
+			
+
 class MinHash:
 	def __init__(self, numPerms, p = None):
 		if p is not None:
@@ -21,7 +30,6 @@ class MinHash:
 
 	def bucketData(self, data):
 		self.N = data.get_shape()[1]
-		print self.N
 		perm = {}
 		for a, b in itertools.izip(self.aList,self.bList):
 			for x in range(0,self.N):
@@ -29,7 +37,7 @@ class MinHash:
 						perm[x] = []
 					perm[x] += [self.hashF(a,b,x)]
 		for i, row in enumerate(data):
-			print "row "+str(i)
+#			print "row "+str(i)
 			nonZero = sparse.find(row)[1]
 			first = []
 			for col in nonZero:
@@ -40,4 +48,3 @@ class MinHash:
 						first[j] = elem 
 			self.buckets[i] = first
 		return self.buckets
-					
