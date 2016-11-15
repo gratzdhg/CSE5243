@@ -52,5 +52,7 @@ class MinHash:
 					if first[j] > perm[word][j]:
 						first[j] = perm[word][j]
 						words[j] = word
+			if len(first) == 0:
+				first = [-1] * len(self.aList)
 			self.buckets.append(first)
 		return self.buckets

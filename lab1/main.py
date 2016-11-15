@@ -11,12 +11,13 @@ import time
 import minhash
 from jaccardcompare import simNonZ
 
-def main(k, filenum = 2):
+def main(k, outfile, split = .3, numTrials = 10, filenum = 2):
 	#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
 	filename2="out2.xml"
 	filename=""
+	out = open(outfile,"w")
 	if filenum == 2:
 		filename = filename2
 	else:
@@ -29,10 +30,14 @@ def main(k, filenum = 2):
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
 	print "End Data Read"
-	m = m[range(0,int(m.shape[0]*.01)),:]
+	numDocs = m.shape[0]
+	for i in range(0, numTrials):
+		minhashCompare(k,m[range((int(numDocs*split)*i)%numDocs,(int(numDocs*split)*(i+1))%numDocs),:], out)
+
+def minhashCompare(k, m, out):
 	numDocs = m.get_shape()[0]
 	numWords = m.get_shape()[1]
-	print "Docs: "+str(numDocs)
+	out.write("Docs: "+str(numDocs)+"\n")
 	sigs = []
 	minhashTimes = [0] * len(k)
 	error = [0] * len(k)
@@ -41,8 +46,8 @@ def main(k, filenum = 2):
 		hasher = minhash.MinHash(kVal)
 		sigs.append(hasher.bucketData(m))
 		temp -= time.time()
-		print "Min Hash Construction for "+str(kVal)
-		print "in "+str(-1*temp)
+		out.write("Min Hash Construction for "+str(kVal)+"\n")
+		out.write("in "+str(-1*temp)+"\n")
 		minhashTimes.append(0.0)
 	jaccardTime = 0.0
 	numDocPairs = 0
@@ -61,12 +66,12 @@ def main(k, filenum = 2):
 				tempTime = time.time()
 				minHashSim = minhash.compare(sigs[l][i],sigs[l][j])
 				minhashTimes[l] += tempTime - time.time()
-				error[l] += abs(minHashSim - sim) ** 2
+				error[l] += (minHashSim - sim) ** 2
 			numDocPairs += 1
 	print "End Comparison"
-	print "Jaccard Time: "+str(-1*jaccardTime)
+	out.write("Jaccard Time: "+str(-1*jaccardTime)+"\n")
 	for i, kVal in enumerate(k):
-		print "For "+str(kVal)
-		print "Min Hash Time: "+str(-1*minhashTimes[i])
-		print "Mean Squared Error: %"+str(error[i]*100/numDocPairs)
+		out.write("For "+str(kVal)+"\n")
+		out.write("Min Hash Time: "+str(-1*minhashTimes[i])+"\n")
+		out.write("Mean Squared Error: %"+str(error[i]*100/numDocPairs)+"\n")
 	
