@@ -29,7 +29,7 @@ def main(k, filenum = 2):
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
 	print "End Data Read"
-	m = m[range(0,int(m.shape[0]*.05)),:]
+	m = m[range(0,int(m.shape[0]*.01)),:]
 	numDocs = m.get_shape()[0]
 	numWords = m.get_shape()[1]
 	print "Docs: "+str(numDocs)
@@ -48,7 +48,7 @@ def main(k, filenum = 2):
 	numDocPairs = 0
 	nonZero = []
 	for i in range(0,numDocs):
-		nonZero.append(sorted(sparse.find(m[i])[1]))
+		nonZero.append(set(sparse.find(m[i])[1]))
 	print "Begin Comparison"
 	print "Document: "
 	for i in range(0, numDocs):
@@ -61,12 +61,12 @@ def main(k, filenum = 2):
 				tempTime = time.time()
 				minHashSim = minhash.compare(sigs[l][i],sigs[l][j])
 				minhashTimes[l] += tempTime - time.time()
-				error[l] += abs(minHashSim - sim)/sim
+				error[l] += abs(minHashSim - sim) ** 2
 			numDocPairs += 1
 	print "End Comparison"
 	print "Jaccard Time: "+str(-1*jaccardTime)
 	for i, kVal in enumerate(k):
 		print "For "+str(kVal)
 		print "Min Hash Time: "+str(-1*minhashTimes[i])
-		print "Relative Mean Error: %"+str(error[i]*100/numDocPairs)
+		print "Mean Squared Error: %"+str(error[i]*100/numDocPairs)
 	
