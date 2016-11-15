@@ -11,7 +11,7 @@ import time
 import minhash
 from jaccardcompare import simNonZ
 
-def main(k, outfile, split = .3, numTrials = 10, filenum = 2):
+def main(k, outfile, split = .3, numTrials = 10, startTrial = 0, filenum = 2):
 	#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
@@ -31,8 +31,8 @@ def main(k, outfile, split = .3, numTrials = 10, filenum = 2):
 	m = handler.getMatrix().tocsr()
 	print "End Data Read"
 	numDocs = m.shape[0]
-	for i in range(0, numTrials):
-		minhashCompare(k,m[range((int(numDocs*split)*i)%numDocs,(int(numDocs*split)*(i+1))%numDocs),:], out)
+	for i in range(startTrial, numTrials):
+		minhashCompare(k, m[[d % numDocs for d in range((int(numDocs*split)*i),(int(numDocs*split)*(i+1)))],:], out)
 
 def minhashCompare(k, m, out):
 	numDocs = m.get_shape()[0]
