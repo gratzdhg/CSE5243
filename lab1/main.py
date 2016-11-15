@@ -74,4 +74,5 @@ def minhashCompare(k, m, out):
 		out.write("For "+str(kVal)+"\n")
 		out.write("Min Hash Time: "+str(-1*minhashTimes[i])+"\n")
 		out.write("Mean Squared Error: %"+str(error[i]*100/numDocPairs)+"\n")
+        out.flush()
 	
