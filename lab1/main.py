@@ -11,7 +11,7 @@ import time
 import minhash
 from jaccardcompare import simNonZ
 
-def main(filenum = 2, k = 256):
+def main(k, filenum = 2):
 	#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
@@ -29,38 +29,44 @@ def main(filenum = 2, k = 256):
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
 	print "End Data Read"
-#	m = m[range(0,int(m.shape[0]*.01)),:]
+	m = m[range(0,int(m.shape[0]*.05)),:]
 	numDocs = m.get_shape()[0]
 	numWords = m.get_shape()[1]
 	print "Docs: "+str(numDocs)
-	temp = time.time()
-	hasher = minhash.MinHash(k)
-	sigs = hasher.bucketData(m)
-	temp -= time.time()
-	print "End Min Hash Construction"
-	print "in "+str(-1*temp)
-	minhashTime = 0.0
+	sigs = []
+	minhashTimes = [0] * len(k)
+	error = [0] * len(k)
+	for kVal in k:
+		temp = time.time()
+		hasher = minhash.MinHash(kVal)
+		sigs.append(hasher.bucketData(m))
+		temp -= time.time()
+		print "Min Hash Construction for "+str(kVal)
+		print "in "+str(-1*temp)
+		minhashTimes.append(0.0)
 	jaccardTime = 0.0
-	error = 0
 	numDocPairs = 0
 	nonZero = []
 	for i in range(0,numDocs):
-		nonZero.append(sparse.find(m[i])[1])
+		nonZero.append(sorted(sparse.find(m[i])[1]))
 	print "Begin Comparison"
 	print "Document: "
 	for i in range(0, numDocs):
-		print str(i)+"..."
+		print str(i)
 		for j in range(i+1, numDocs):
 			tempTime = time.time()
 			sim = simNonZ(nonZero[i], nonZero[j], numWords)
 			jaccardTime += tempTime - time.time()
-			tempTime = time.time()
-			minHashSim = minhash.compare(sigs[i],sigs[j])
-			minhashTime += tempTime - time.time()
-			error += abs(minHashSim - sim)/sim
+			for l in range(0,len(k)):
+				tempTime = time.time()
+				minHashSim = minhash.compare(sigs[l][i],sigs[l][j])
+				minhashTimes[l] += tempTime - time.time()
+				error[l] += abs(minHashSim - sim)/sim
 			numDocPairs += 1
 	print "End Comparison"
-	print "Min Hash Time: "+str(-1*minhashTime)
 	print "Jaccard Time: "+str(-1*jaccardTime)
-	print "Relative Mean Error: %"+str(error*100/numDocPairs)
+	for i, kVal in enumerate(k):
+		print "For "+str(kVal)
+		print "Min Hash Time: "+str(-1*minhashTimes[i])
+		print "Relative Mean Error: %"+str(error[i]*100/numDocPairs)
 	

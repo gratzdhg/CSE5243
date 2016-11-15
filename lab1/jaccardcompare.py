@@ -12,8 +12,7 @@ def simNonZ(nonZero1, nonZero2, length):
 	diff = 0
 	i = 0
 	j = 0
-	minLen = min(len(nonZero1), len(nonZero2))
-	while max(i,j) < minLen:
+	while i < len(nonZero1) and j < len(nonZero2):
 		if nonZero1[i] == nonZero2[j]:
 			same += 1
 			i += 1

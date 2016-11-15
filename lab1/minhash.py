@@ -7,8 +7,7 @@ def compare(data1, data2):
 	for i in range(0,len(data2)):
 		if data1[i] == data2[i]:
 			same += 1
-	diff = len(data1) - same
-	return float(same)/(same + 2*diff)
+	return float(same)/len(data2)
 			
 
 class MinHash:
@@ -22,29 +21,28 @@ class MinHash:
 		self.bList = []
 		self.N = 0
 		for i in range(0,numPerms):
-			self.aList.append(random.randint(0,1000000000000))
-			self.bList.append(random.randint(0,1000000000000))
+			self.aList.append(random.randint(10000000,1000000000000))
+			self.bList.append(random.randint(10000000,1000000000000))
 
 	def hashF(self,a,b,x):
 		return ((a*x+b)%self.p)%self.N
 
 	def bucketData(self, data):
 		self.N = data.get_shape()[1]
-		perm = {}
-		for a, b in itertools.izip(self.aList,self.bList):
-			for x in range(0,self.N):
-					if x not in perm:
-						perm[x] = []
-					perm[x] += [self.hashF(a,b,x)]
-		for i, row in enumerate(data):
-#			print "row "+str(i)
-			nonZero = sparse.find(row)[1]
+		perm = []
+		for x in range(0,self.N):
+			perm.append([])
+			for i in range(0,len(self.aList)):
+					perm[x].append(self.hashF(self.aList[i],self.bList[i],x))
+		for i, doc in enumerate(data):
+			nonZero = sparse.find(doc)[1]
 			first = []
-			for col in nonZero:
-				for j, elem in enumerate(perm[col]):
-					if j == len(first):
-						first.append(elem)
-					elif elem < first[j]:
-						first[j] = elem 
+			for word in nonZero:
+				if len(first) == 0:
+					first = perm[word]
+					continue
+				for j in range(0,len(perm[word])):
+					if first[j] > perm[word][j]:
+						first[j] = perm[word][j]
 			self.buckets[i] = first
 		return self.buckets
