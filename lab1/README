@@ -3,7 +3,7 @@ REQUIREMENTS:   python2.7, BeautifulSoup, nltk
 RUN:            either run make or ./main.py or python2.7 main.py
 		to run the classifiers with different options, you can run it in the python
 		interpreter.
-RUN TIME:       ~6min
+RUN TIME:       +5hrs
 DATA FILES:     they are xml documents named out1.xml and out2.xml for the two methods we used to
                 process the data copy them from FILE LOCATIONS
 FILE LOCATIONS: ~gratzd/CSE5243/lab1 or github.com/gratzdhg/CSE5243

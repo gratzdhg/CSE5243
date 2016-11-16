@@ -11,7 +11,7 @@ import time
 import minhash
 from jaccardcompare import simNonZ
 
-def main(k, outfile, split = .3, numTrials = 10, startTrial = 0, filenum = 2):
+def main(k, outfile, split = .15, numTrials = 10, startTrial = 0, filenum = 2):
 	#    path="/home/0/srini/WWW/674/public/reuters/"
 	path = "./"
 	filename1="out1.xml"
@@ -76,3 +76,4 @@ def minhashCompare(k, m, out):
 		out.write("Mean Squared Error: %"+str(error[i]*100/numDocPairs)+"\n")
         out.flush()
 	
+main([16,32,64,128,256], "lab4out.txt")
