@@ -29,6 +29,7 @@ def main(k, outfile, split = .15, numTrials = 10, startTrial = 0, filenum = 2):
 	datasource = open(filename,"r")
 	reader.parse(datasource)
 	m = handler.getMatrix().tocsr()
+	return
 	print "End Data Read"
 	numDocs = m.shape[0]
 	for i in range(startTrial, numTrials):

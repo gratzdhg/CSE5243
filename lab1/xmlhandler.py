@@ -5,6 +5,8 @@ from xml.sax.handler import ContentHandler
 
 class XMLHandler(ContentHandler):
 	def __init__(self, include_empty_topics = True):
+		self.docFile = open("docs.txt",'w')
+		self.topicFile = open("topics.txt",'w')
 		self.include_topicless_docs = include_empty_topics
 		self.fullTopicList = []
 		self.fullPlaceList = []
@@ -32,12 +34,15 @@ class XMLHandler(ContentHandler):
 				self.data += self.newData
 				self.colIndex += self.newColIndex
 				self.rowIndex += self.newRowIndex
+				self.docFile.write("\n")
 		elif name == "place":
 			self.checkWord(self.value)
 			self.placeList.append(self.wordPosMap[self.value])
 		elif name == "topic":
-			self.checkWord(self.value)
+			if self.checkWord(self.value):
+				self.topicFile.write(":"+self.value+"\n")
 			self.topicList.append(self.wordPosMap[self.value])
+			self.docFile.write(":"+self.value+" ")
 		elif name == "feature":
 			split = self.value.split(" : ",2)
 			if len(split) < 2:
@@ -47,6 +52,7 @@ class XMLHandler(ContentHandler):
 			self.newData.append(float(split[1]))
 			self.newColIndex.append(self.numDocs)
 			self.newRowIndex.append(self.wordPosMap[split[0]])
+			self.docFile.write(split[0]+" ")
 	def characters(self,content):
 		self.value = content
 	def getMatrix(self):
@@ -55,4 +61,6 @@ class XMLHandler(ContentHandler):
 		if word not in self.wordPosMap:
 			self.wordPosMap[word] = self.wordPosInc
 			self.wordPosInc += 1
+			return True
+		return False
 
