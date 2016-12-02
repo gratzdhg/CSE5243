@@ -23,8 +23,8 @@ class Rule(object):
 					self.invalid = True
 				else:
 					rest = rest[:-1]
-					self.support = int(rest.split(',')[0].strip())
-					self.confidence = int(rest.split(',')[1].strip())
+					self.support = float(rest.split(',')[0].strip())
+					self.confidence = float(rest.split(',')[1].strip())
 					
 	def is_valid(self):
 		return not self.invalid
@@ -46,21 +46,27 @@ class Rule(object):
 		
 def sort_rules(rule_file):
 	f = open(rule_file)
-	contents = f.read()
-	f.close()
-	rules = contents.split('\n')
-	rules = [Rule(s) for s in rules]
+	rules = []
+	for s in f:
+		r = Rule(s)
+		if r.is_valid():
+			rules += [r]
 	rules = sorted(rules, key = lambda x: x.get_sort_key(), reverse = True)
+	f.close()
 	return rules
 	
 def apply_rules(documents, rules, threshold = 5):
-	value ={}
+	value = []
 	for doc in documents:
-		applicable = [r for r in rules if r <= doc]
-		if len(applicable) > threshold:
-			applicable = applicable[:threshold]
+		count = 0
+		applicable = []
+		while len(applicable) < threshold and count < len(rules):
+			r = rules[count]
+			if r.get_word_set() <= doc:
+				applicable += [r]
+			count += 1
 		topics = set([r.get_topic() for r in applicable])
-		value[doc] = topics
+		value.append(topics)
 	return value
 	
 
